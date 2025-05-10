@@ -14,10 +14,10 @@ import (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Add a request task
-	// (POST /task)
+	// (POST /v1/task)
 	AddTask(c *gin.Context)
 	// Get the result of completing a task
-	// (GET /task/{id})
+	// (GET /v1/task/{id})
 	GetTaskResult(c *gin.Context, id string)
 }
 
@@ -94,6 +94,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
-	router.POST(options.BaseURL+"/task", wrapper.AddTask)
-	router.GET(options.BaseURL+"/task/:id", wrapper.GetTaskResult)
+	router.POST(options.BaseURL+"/v1/task", wrapper.AddTask)
+	router.GET(options.BaseURL+"/v1/task/:id", wrapper.GetTaskResult)
 }

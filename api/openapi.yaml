@@ -4,7 +4,7 @@ info:
   description: http proxy service
   version: 1.0.0
 paths:
-  /task:
+  /v1/task:
     post:
       operationId: addTask
       summary: Add a request task
@@ -35,7 +35,7 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error'
-  /task/{id}:
+  /v1/task/{id}:
     get:
       operationId: getTaskResult
       summary: Get the result of completing a task
