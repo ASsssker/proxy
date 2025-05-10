@@ -13,7 +13,7 @@ import (
 
 type ProxyService interface {
 	AddTask(ctx context.Context, newTask models.NewTask) (string, error)
-	GetTaskInfo(ctx context.Context, taskID string) (models.TaskInfo, error)
+	GetTaskInfo(ctx context.Context, taskID string) (models.TaskResult, error)
 }
 
 type Handler struct {

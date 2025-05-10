@@ -17,6 +17,11 @@ depends:
 	go mod download
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.6
 
+## test: запуск тестов
+.PHONY: test
+test:
+	go test ./... -v --race
+
 ## generate: псевдоним для "go generate ./.."
 .PHONY: generate
 generate:
