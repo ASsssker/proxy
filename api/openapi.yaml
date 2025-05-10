@@ -79,11 +79,9 @@ components:
             - "GET"
             - "POST"
         headers:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              type: string
+          type: object
+          additionalProperties:
+            type: string
         body:
           type: string
       required:
@@ -105,11 +103,9 @@ components:
         http_status_code:
           type: integer
         headers:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              type: string
+          type: object
+          additionalProperties:
+            type: string
         body:
           type: string
         content_length:
