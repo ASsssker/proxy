@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  title: proxy service
+  description: http proxy service
+  version: 1.0.0
+paths:
+  /task:
+    post:
+      operationId: addTask
+      summary: Add a request task
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Task'
+      responses:
+        201:
+          description: Task added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+        400:
+          description: The task was not created, the error is on the user's side
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error on the server side
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /task/{id}:
+    get:
+      operationId: getTaskResult
+      summary: Get the result of completing a task
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The result of the task was successfully received
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/TaskResult'
+        404:
+          description: Task not found
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error on the server side
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+
+  
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        url:
+          type: string
+        method: 
+          type: string
+          enum:
+            - "GET"
+            - "POST"
+        headers:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+        body:
+          type: string
+      required:
+        - url
+        - method
+  
+    TaskResult:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - "done"
+          - "in_process"
+          - "error"
+          - "new"
+        http_status_code:
+          type: integer
+        headers:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+        body:
+          type: string
+        content_length:
+          type: integer
+      required:
+          - id
+          - status
+          
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: integer
+        description:
+          type: string
+      required:
+        - error_code
