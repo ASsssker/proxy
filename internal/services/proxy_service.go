@@ -13,7 +13,7 @@ import (
 )
 
 type TaskProvider interface {
-	AddTask(ctx context.Context, TaskResult models.TaskResult) error
+	AddTask(ctx context.Context, taskID string) error
 	GetTask(ctx context.Context, taskID string) (models.TaskResult, error)
 }
 
@@ -50,12 +50,8 @@ func (p ProxyService) AddTask(ctx context.Context, newTask models.NewTask) (stri
 	}
 
 	taskID := uuid.NewString()
-	taskInfo := models.TaskResult{
-		ID:     taskID,
-		Status: models.StatusNew,
-	}
 
-	if err := p.taskProvider.AddTask(ctx, taskInfo); err != nil {
+	if err := p.taskProvider.AddTask(ctx, taskID); err != nil {
 		return "", fmt.Errorf("%s request_id=%s failed to add task: %w", op, requestID, err)
 	}
 

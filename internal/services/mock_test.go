@@ -20,7 +20,7 @@ type mockTaskProvider struct {
 	mock.Mock
 }
 
-func (tp *mockTaskProvider) AddTask(ctx context.Context, taskResult models.TaskResult) error {
+func (tp *mockTaskProvider) AddTask(ctx context.Context, taskID string) error {
 	args := tp.Called(ctx.Value(RequestIDKey))
 	return args.Error(0)
 }
