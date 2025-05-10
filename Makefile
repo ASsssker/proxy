@@ -17,6 +17,11 @@ depends:
 	go mod download
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.6
 
+## generate: псевдоним для "go generate ./.."
+.PHONY: generate
+generate:
+	go generate ./...
+
 ## lint: запуск линтера
 .PHONY: lint
 lint:
