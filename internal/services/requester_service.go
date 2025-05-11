@@ -115,7 +115,7 @@ func (r RequesterService) processTask(task models.Task) {
 
 		if err := r.taskUpdater.UpdateTaskStatus(ctx, task.ID, models.StatusError); err != nil {
 			r.log.Error("failed to update task status", slog.String("task_id", task.ID),
-				slog.String("status", string(models.StatusInProcess)),
+				slog.String("status", string(models.StatusError)),
 				slog.String("error", err.Error()),
 			)
 
