@@ -5,6 +5,7 @@ go 1.24.2
 tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen
 
 require (
+	github.com/alitto/pond/v2 v2.3.4
 	github.com/getkin/kin-openapi v0.127.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/validator/v10 v10.26.0
