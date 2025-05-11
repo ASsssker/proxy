@@ -78,6 +78,52 @@ func (r *RabbitMQ) SendTask(ctx context.Context, task models.Task) error {
 	return nil
 }
 
+func (r *RabbitMQ) Subscribe(ctx context.Context, taskChan chan models.Task) (context.CancelFunc, error) {
+	msgChan, err := r.ch.ConsumeWithContext(ctx,
+		r.queueName,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to cunsume mq: %v", err)
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		for {
+			select {
+			case msg := <-msgChan:
+				r.log.Debug("mq receiver message", slog.String("message_body", string(msg.Body)))
+
+				task := models.Task{}
+				if err := json.Unmarshal(msg.Body, &task); err != nil {
+					r.log.Error("failed to unmrashelled mq message", slog.String("message_body", string(msg.Body)))
+					continue
+				}
+
+				select {
+				case taskChan <- task:
+				case <-ctx.Done():
+					close(taskChan)
+					return
+				}
+
+			case <-ctx.Done():
+				close(taskChan)
+				return
+			}
+		}
+	}()
+
+	return cancel, nil
+}
+
 func (r *RabbitMQ) Close(_ context.Context) error {
 	if errChanClose := r.ch.Close(); errChanClose != nil {
 		if err := r.conn.Close(); err != nil {

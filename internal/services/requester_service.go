@@ -18,7 +18,7 @@ type TaskUpdater interface {
 }
 
 type MessageReceiver interface {
-	Subscribe(ctx context.Context, taskChan chan models.Task) error
+	Subscribe(ctx context.Context, taskChan chan models.Task) (context.CancelFunc, error)
 	Close(ctx context.Context) error
 }
 
@@ -33,6 +33,7 @@ type RequesterService struct {
 	taskExecutor TaskExecutor
 	pool         pond.Pool
 	taskChan     chan models.Task
+	cancel       context.CancelFunc
 }
 
 func NewRequesterService(log slog.Logger, cfg config.Config, taskUpdater TaskUpdater, msgReceiver MessageReceiver) *RequesterService {
@@ -46,10 +47,13 @@ func NewRequesterService(log slog.Logger, cfg config.Config, taskUpdater TaskUpd
 }
 
 func (r RequesterService) Run(ctx context.Context) error {
-	if err := r.msgReceiver.Subscribe(ctx, r.taskChan); err != nil {
+	cancel, err := r.msgReceiver.Subscribe(ctx, r.taskChan)
+	if err != nil {
 		return fmt.Errorf("failed to run requester service: %w", err)
 	}
 
+	defer cancel()
+	r.cancel = cancel
 	for task := range r.taskChan {
 		err := r.pool.Go(func() {
 			r.processTask(task)
@@ -68,6 +72,7 @@ func (r RequesterService) Run(ctx context.Context) error {
 
 func (r RequesterService) Close(ctx context.Context) error {
 	defer r.pool.StopAndWait()
+	r.cancel()
 
 	errCloseTaskUpdater := r.taskUpdater.Close(ctx)
 	if errCloseTaskUpdater != nil {
