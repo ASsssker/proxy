@@ -36,13 +36,16 @@ type RequesterService struct {
 	cancel       context.CancelFunc
 }
 
-func NewRequesterService(log slog.Logger, cfg config.Config, taskUpdater TaskUpdater, msgReceiver MessageReceiver) *RequesterService {
+func NewRequesterService(log slog.Logger, cfg config.Config, taskUpdater TaskUpdater,
+	msgReceiver MessageReceiver, taskExecutor TaskExecutor) *RequesterService {
+
 	return &RequesterService{
-		log:         &log,
-		taskUpdater: taskUpdater,
-		msgReceiver: msgReceiver,
-		pool:        pond.NewPool(int(cfg.RequesterWorkersCount), pond.WithNonBlocking(true)),
-		taskChan:    make(chan models.Task),
+		log:          &log,
+		taskUpdater:  taskUpdater,
+		msgReceiver:  msgReceiver,
+		taskExecutor: taskExecutor,
+		pool:         pond.NewPool(int(cfg.RequesterWorkersCount), pond.WithNonBlocking(true)),
+		taskChan:     make(chan models.Task),
 	}
 }
 

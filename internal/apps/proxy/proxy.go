@@ -79,7 +79,9 @@ func (p ProxyApp) MustRun(ctx context.Context) {
 	if err := p.srv.ListenAndServe(); err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
 			p.log.ErrorContext(ctx, "failed to run http server", slog.String("error", err.Error()))
+			return
 		}
+		panic(err)
 	}
 }
 

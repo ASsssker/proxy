@@ -18,7 +18,10 @@ type RequestExecutor struct {
 
 func NewRequestExecutor(cfg config.Config) *RequestExecutor {
 	return &RequestExecutor{
-		client: &http.Client{},
+		client: &http.Client{
+			Timeout: cfg.RequesterHTTPClientTimeout,
+		},
+		retryCount: cfg.RequesterRetryCount,
 	}
 }
 
