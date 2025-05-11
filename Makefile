@@ -23,10 +23,16 @@ down:
 	docker compose down
 
 
+## logs: псевдоним "docker compose logs -f"
+.PHONY: logs
+logs:
+	docker compose logs -f
+
+
 ## clear: очистка volume хранилищ
 .PHONY: clear
 clear:
-	docker volume rm proxy_postgres_data
+	docker volume rm proxy_postgres_data proxy_rabbitmq_data
 
 
 ## depends: установка зависимостей

@@ -22,7 +22,11 @@ type Handler struct {
 }
 
 func Register(server gin.IRouter, log *slog.Logger, proxyService ProxyService) {
-	RegisterHandlers(server, Handler{log: log, proxyService: proxyService})
+	RegisterHandlersWithOptions(server, Handler{log: log, proxyService: proxyService},
+		GinServerOptions{
+			Middlewares: []MiddlewareFunc{
+				MiddlewareFunc(RequestIDMiddleware()),
+			}})
 }
 
 func (h Handler) AddTask(ctx *gin.Context) {

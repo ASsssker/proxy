@@ -10,6 +10,7 @@ import (
 	"github.com/ASsssker/proxy/internal/models"
 	"github.com/ASsssker/proxy/internal/services"
 	"github.com/ASsssker/proxy/internal/storage"
+	_ "github.com/lib/pq"
 )
 
 type PostgresDB struct {
@@ -73,7 +74,7 @@ func (p PostgresDB) AddTask(ctx context.Context, taskID string) error {
 	log := p.log.With(slog.String("op", op), slog.String(services.RequestIDKey, requestID))
 	log.DebugContext(ctx, "start operation")
 
-	stmt := `INSERT INTO tasks (id)
+	stmt := `INSERT INTO tasks (id, status)
 			VALUES($1, $2)`
 
 	if _, err := p.db.ExecContext(ctx, stmt, taskID, models.StatusNew); err != nil {

@@ -36,9 +36,9 @@ type PostgresConfig struct {
 func (p PostgresConfig) PostgresDNS() string {
 	u := url.URL{
 		Scheme:   "postgres",
-		User:     url.UserPassword(url.QueryEscape(p.PostgresUser), url.QueryEscape(p.PostgresPassword)),
+		User:     url.UserPassword(p.PostgresUser, p.PostgresPassword),
 		Host:     net.JoinHostPort(p.PostgresHost, p.PostgresPort),
-		Path:     url.PathEscape("/" + p.PostgresDB),
+		Path:     "/" + p.PostgresDB,
 		RawQuery: buildQuery(map[string]string{"sslmode": "disable"}),
 	}
 
@@ -56,7 +56,7 @@ type RabbitMQConfig struct {
 func (r RabbitMQConfig) RabbitDNS() string {
 	u := url.URL{
 		Scheme: "amqp",
-		User:   url.UserPassword(url.QueryEscape(r.RabbitUser), url.QueryEscape(r.RabbitPassword)),
+		User:   url.UserPassword(r.RabbitUser, r.RabbitPassword),
 		Host:   net.JoinHostPort(r.RabbitHost, r.RabbitPort),
 		Path:   "/",
 	}
