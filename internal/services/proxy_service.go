@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/ASsssker/proxy/internal/models"
 	"github.com/ASsssker/proxy/internal/storage"
@@ -60,7 +61,7 @@ func (p ProxyService) AddTask(ctx context.Context, newTask models.NewTask) (stri
 	task := models.Task{
 		ID:      taskID,
 		URL:     newTask.URL,
-		Method:  newTask.Method,
+		Method:  strings.ToUpper(newTask.Method),
 		Headers: newTask.Headers,
 		Body:    newTask.Body,
 	}
