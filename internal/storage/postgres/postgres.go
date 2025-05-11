@@ -87,6 +87,55 @@ func (p PostgresDB) AddTask(ctx context.Context, taskID string) error {
 	return nil
 }
 
+func (p PostgresDB) UpdateTaskStatus(ctx context.Context, taskID string, newStatus models.TaskStatus) error {
+	const op = "postgres.UpdateTaskStatus"
+
+	log := p.log.With(slog.String("op", op), slog.String("task_id", taskID))
+	log.DebugContext(ctx, "start operation")
+
+	stmt := `UPDATE tasks
+			SET status = $1
+			WHERE id = $2`
+
+	if _, err := p.db.ExecContext(ctx, stmt, string(newStatus), taskID); err != nil {
+		return fmt.Errorf("%s task_id=%s failed to update task status: %v", op, taskID, err)
+	}
+
+	log.DebugContext(ctx, "the operation was successfully completed")
+
+	return nil
+}
+
+func (p PostgresDB) UpdateTaskResult(ctx context.Context, taskResult models.TaskResult) error {
+	const op = "postgres.UpdateTaskResult"
+
+	log := p.log.With(slog.String("op", op), slog.String("task_id", taskResult.ID))
+	log.DebugContext(ctx, "start operation")
+
+	stmt := `UPDATE tasks
+			SET status = $1,
+				status_code = $2,
+				headers = $3,
+				body = $4,
+				content_length = $4
+			WHERE id = $6`
+
+	if _, err := p.db.ExecContext(ctx, stmt,
+		taskResult.Status,
+		taskResult.StatusCode,
+		taskResult.Headers,
+		taskResult.Body,
+		taskResult.ContentLength,
+		taskResult.ID,
+	); err != nil {
+		return fmt.Errorf("%s task_id=%s failed to update task status: %v", op, taskResult.ID, err)
+	}
+
+	log.DebugContext(ctx, "the operation was successfully completed")
+
+	return nil
+}
+
 func (p PostgresDB) Close(_ context.Context) error {
 	return p.db.Close()
 }
