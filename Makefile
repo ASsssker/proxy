@@ -26,7 +26,7 @@ down:
 ## clear: очистка volume хранилищ
 .PHONY: clear
 clear:
-	docker volume rm http-proxy_postgres_data
+	docker volume rm proxy_postgres_data
 
 
 ## depends: установка зависимостей

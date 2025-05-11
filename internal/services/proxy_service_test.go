@@ -47,7 +47,7 @@ func TestAddTask_GoodPath(t *testing.T) {
 	mockProvider := new(mockTaskProvider)
 
 	for _, tt := range tests {
-		mockSender.On("Send", tt.ctx.Value(RequestIDKey)).Return(nil)
+		mockSender.On("SendTask", tt.ctx.Value(RequestIDKey)).Return(nil)
 		mockProvider.On("AddTask", tt.ctx.Value(RequestIDKey)).Return(nil)
 	}
 	service := newProxyService(mockProvider, mockSender)
@@ -138,7 +138,7 @@ func TestAddTask_BadPath(t *testing.T) {
 	mockSender := new(mockMessageBroker)
 	mockProvider := new(mockTaskProvider)
 	for _, tt := range tests {
-		mockSender.On("Send", tt.ctx.Value(RequestIDKey)).Return(tt.errMsgSender)
+		mockSender.On("SendTask", tt.ctx.Value(RequestIDKey)).Return(tt.errMsgSender)
 		mockProvider.On("AddTask", tt.ctx.Value(RequestIDKey)).Return(tt.errTaskProvider)
 	}
 

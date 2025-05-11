@@ -16,3 +16,4 @@ CREATE TABLE IF NOT EXISTS tasks (
 DROP TABLE IF EXISTS tasks;
 DROP TYPE IF EXISTS statuses;
 -- +goose StatementEnd
+    

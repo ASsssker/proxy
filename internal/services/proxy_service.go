@@ -18,7 +18,8 @@ type TaskProvider interface {
 }
 
 type MessageSender interface {
-	Send(ctx context.Context, task models.Task) error
+	SendTask(ctx context.Context, task models.Task) error
+	Close(ctx context.Context) error
 }
 
 type ProxyService struct {
@@ -62,7 +63,7 @@ func (p ProxyService) AddTask(ctx context.Context, newTask models.NewTask) (stri
 		Headers: newTask.Headers,
 		Body:    newTask.Body,
 	}
-	if err := p.msgSender.Send(ctx, task); err != nil {
+	if err := p.msgSender.SendTask(ctx, task); err != nil {
 		return "", fmt.Errorf("%s request_id=%s failed to send task %s: %w", op, requestID, taskID, err)
 	}
 
@@ -81,7 +82,8 @@ func (p ProxyService) GetTaskInfo(ctx context.Context, taskID string) (models.Ta
 	taskInfo, err := p.taskProvider.GetTask(ctx, taskID)
 	if err != nil {
 		if errors.Is(err, storage.ErrTaskNotFound) {
-			return models.TaskResult{}, fmt.Errorf("%s request_id=%s task not found: %w", op, requestID, ErrTaskNotFound)
+			return models.TaskResult{}, fmt.Errorf("%s request_id=%s task not found: %w",
+				op, requestID, ErrTaskNotFound)
 		}
 
 		return models.TaskResult{}, fmt.Errorf("%s request_id=%s failed to get task: %w", op, requestID, err)

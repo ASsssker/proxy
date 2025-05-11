@@ -23,7 +23,7 @@ func NewPostgresDB(ctx context.Context, log *slog.Logger, dns string) (*Postgres
 		return nil, fmt.Errorf("failed to open postgres connection: %v", err)
 	}
 
-	if err := db.PingContext(ctx); err != nil {
+	if err = db.PingContext(ctx); err != nil {
 		return nil, fmt.Errorf("failed to ping postgres: %v", err)
 	}
 
@@ -51,10 +51,12 @@ func (p PostgresDB) GetTask(ctx context.Context, taskID string) (models.TaskResu
 		&taskResult.ContentLength,
 	); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.TaskResult{}, fmt.Errorf("%s request_id=%s task not found: %w: %v", op, requestID, storage.ErrTaskNotFound, err)
+			return models.TaskResult{}, fmt.Errorf("%s request_id=%s task not found: %w: %v",
+				op, requestID, storage.ErrTaskNotFound, err)
 		}
 
-		return models.TaskResult{}, fmt.Errorf("%s request_id=%s task not found: %v", op, requestID, err)
+		return models.TaskResult{}, fmt.Errorf("%s request_id=%s task not found: %v",
+			op, requestID, err)
 	}
 
 	taskResult.Status = models.TaskStatus(status)
@@ -75,7 +77,8 @@ func (p PostgresDB) AddTask(ctx context.Context, taskID string) error {
 			VALUES($1, $2)`
 
 	if _, err := p.db.ExecContext(ctx, stmt, taskID, models.StatusNew); err != nil {
-		return fmt.Errorf("%s request_id=%s failed to add new task: %v", op, requestID, err)
+		return fmt.Errorf("%s request_id=%s failed to add new task: %v",
+			op, requestID, err)
 	}
 
 	log.DebugContext(ctx, "the operation was successfully completed")

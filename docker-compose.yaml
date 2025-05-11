@@ -16,6 +16,21 @@ services:
         timeout: 5s
         retries: 5
       restart: unless-stopped
+    
+    broker:
+      image: rabbitmq:3.12-management
+      container_name: rabbitmq
+      hostname: rabbitmq
+      ports:
+        - "${RABBIT_AMQP_PORT}:${RABBIT_AMQP_PORT}"
+        - "${RABBIT_UI_PORT}:${RABBIT_UI_PORT}"
+      volumes:
+        - rabbitmq_data:/var/lib/rabbitmq
+      environment:
+        - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
+        - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
+      restart: unless-stopped
 
 volumes:
   postgres_data:
+  rabbitmq_data:
