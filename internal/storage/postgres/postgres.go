@@ -85,3 +85,7 @@ func (p PostgresDB) AddTask(ctx context.Context, taskID string) error {
 
 	return nil
 }
+
+func (p PostgresDB) Close(_ context.Context) error {
+	return p.db.Close()
+}

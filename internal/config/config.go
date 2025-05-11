@@ -8,13 +8,41 @@ import (
 )
 
 type Config struct {
+	Env string `env:"ENV"`
+	ProxyServiceConfig
 	RequesterServiceConfig
+	PostgresConfig
 	RabbitMQConfig
+}
+
+type ProxyServiceConfig struct {
+	ProxyHost string `env:"PROXY_HOST"`
+	ProxyPort string `env:"PROXY_PORT"`
 }
 
 type RequesterServiceConfig struct {
 	RequesterWorkersCount uint `env:"REQUESTER_WORKERS_COUNT"`
 	// TODO: coming soon
+}
+
+type PostgresConfig struct {
+	PostgresUser     string `env:"POSTGRES_USER"`
+	PostgresPassword string `env:"POSTGRES_PASSWORD"`
+	PostgresDB       string `env:"POSTGRES_DB"`
+	PostgresPort     string `env:"POSTGRES_PORT"`
+	PostgresHost     string `env:"POSTGRES_HOST"`
+}
+
+func (p PostgresConfig) PostgresDNS() string {
+	u := url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(url.QueryEscape(p.PostgresUser), url.QueryEscape(p.PostgresPassword)),
+		Host:     net.JoinHostPort(p.PostgresHost, p.PostgresPort),
+		Path:     url.PathEscape("/" + p.PostgresDB),
+		RawQuery: buildQuery(map[string]string{"sslmode": "disable"}),
+	}
+
+	return u.String()
 }
 
 type RabbitMQConfig struct {
@@ -44,4 +72,12 @@ func MustLoad() Config {
 	}
 
 	return cfg
+}
+
+func buildQuery(params map[string]string) string {
+	q := url.Values{}
+	for k, v := range params {
+		q.Add(k, v)
+	}
+	return q.Encode()
 }

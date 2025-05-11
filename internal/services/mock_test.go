@@ -34,3 +34,7 @@ func (tp *mockTaskProvider) GetTask(ctx context.Context, _ string) (models.TaskR
 
 	return args.Get(0).(models.TaskResult), args.Error(1)
 }
+
+func (mb *mockTaskProvider) Close(ctx context.Context) error {
+	return nil
+}

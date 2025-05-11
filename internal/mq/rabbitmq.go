@@ -47,7 +47,7 @@ func NewRabbitMQ(cfg config.Config, log *slog.Logger) (*RabbitMQ, error) {
 	}, nil
 }
 
-func (r *RabbitMQ) SendMessage(ctx context.Context, task models.Task) error {
+func (r *RabbitMQ) SendTask(ctx context.Context, task models.Task) error {
 	const op = "rabbitMQ.SendMessage"
 	requestID := ctx.Value(services.RequestIDKey).(string)
 
@@ -78,7 +78,7 @@ func (r *RabbitMQ) SendMessage(ctx context.Context, task models.Task) error {
 	return nil
 }
 
-func (r *RabbitMQ) Close() error {
+func (r *RabbitMQ) Close(_ context.Context) error {
 	if errChanClose := r.ch.Close(); errChanClose != nil {
 		if err := r.conn.Close(); err != nil {
 			return fmt.Errorf("failed to close rabbit connection and channel: %v: %v", err, errChanClose)

@@ -15,6 +15,7 @@ import (
 type TaskProvider interface {
 	AddTask(ctx context.Context, taskID string) error
 	GetTask(ctx context.Context, taskID string) (models.TaskResult, error)
+	Close(ctx context.Context) error
 }
 
 type MessageSender interface {
@@ -30,8 +31,8 @@ type ProxyService struct {
 }
 
 func NewProxyService(log *slog.Logger, taskProvider TaskProvider, msgSender MessageSender,
-	validator *validator.Validate) ProxyService {
-	return ProxyService{
+	validator *validator.Validate) *ProxyService {
+	return &ProxyService{
 		log:          log,
 		taskProvider: taskProvider,
 		msgSender:    msgSender,
@@ -92,4 +93,23 @@ func (p ProxyService) GetTaskInfo(ctx context.Context, taskID string) (models.Ta
 	log.DebugContext(ctx, "the operation was successfully completed")
 
 	return taskInfo, nil
+}
+
+func (p ProxyService) Close(ctx context.Context) error {
+	errCloseTaskProvider := p.taskProvider.Close(ctx)
+	if errCloseTaskProvider != nil {
+		errCloseTaskProvider = fmt.Errorf("failed to close task provider: %v", errCloseTaskProvider)
+
+		if err := p.msgSender.Close(ctx); err != nil {
+			return errors.Join(fmt.Errorf("failed to close message sender: %v", err), errCloseTaskProvider)
+		}
+
+		return errCloseTaskProvider
+	}
+
+	if err := p.msgSender.Close(ctx); err != nil {
+		return fmt.Errorf("failed to close message sender: %v", err)
+	}
+
+	return nil
 }
