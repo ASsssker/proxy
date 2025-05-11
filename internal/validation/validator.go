@@ -7,5 +7,8 @@ func NewValidator() (*validator.Validate, error) {
 	if err := v.RegisterValidation("httpmethod", validateMethod); err != nil {
 		return nil, err
 	}
+	if err := v.RegisterValidation("uuid", validateUUID); err != nil {
+		return nil, err
+	}
 	return v, nil
 }

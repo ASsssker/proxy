@@ -31,8 +31,8 @@ type ProxyApp struct {
 
 func MustNewProxyApp(ctx context.Context, cfg config.Config) ProxyApp {
 	log := setupLogger(cfg.Env)
-	log.Info("starting proxy service", slog.String("env", cfg.Env))
-	log.Debug("credential proxy service", slog.String("host", cfg.ProxyHost), slog.String("port", cfg.ProxyPort))
+	log.InfoContext(ctx, "starting proxy service", slog.String("env", cfg.Env))
+	log.DebugContext(ctx, "credential proxy service", slog.String("host", cfg.ProxyHost), slog.String("port", cfg.ProxyPort))
 
 	taskProvider, err := postgres.NewPostgresDB(ctx, log, cfg.PostgresDNS())
 	if err != nil {
@@ -72,22 +72,22 @@ func MustNewProxyApp(ctx context.Context, cfg config.Config) ProxyApp {
 	}
 }
 
-func (p ProxyApp) MustRun(_ context.Context) {
+func (p ProxyApp) MustRun(ctx context.Context) {
 	if err := p.srv.ListenAndServe(); err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
-			p.log.Error("failed to run http server", slog.String("error", err.Error()))
+			p.log.ErrorContext(ctx, "failed to run http server", slog.String("error", err.Error()))
 		}
 	}
 }
 
 func (p ProxyApp) Stop(ctx context.Context) {
-	p.log.Info("start stopping server")
+	p.log.InfoContext(ctx, "start stopping server")
 	if err := p.srv.Shutdown(ctx); err != nil {
-		p.log.Error("failed to stopping server", slog.String("error", err.Error()))
+		p.log.ErrorContext(ctx, "failed to stopping server", slog.String("error", err.Error()))
 	}
 
 	if err := p.service.Close(ctx); err != nil {
-		p.log.Error("failed to stopping service", slog.String("error", err.Error()))
+		p.log.ErrorContext(ctx, "failed to stopping service", slog.String("error", err.Error()))
 	}
 }
 

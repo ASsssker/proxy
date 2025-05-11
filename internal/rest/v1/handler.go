@@ -49,6 +49,7 @@ func (h Handler) GetTaskResult(ctx *gin.Context, id string) {
 	taskInfo, err := h.proxyService.GetTaskInfo(ctx, id)
 	if err != nil {
 		h.handlingError(ctx, err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, taskInfo)

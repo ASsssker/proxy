@@ -53,11 +53,11 @@ func (t Task) TaskHeadersToHTTPHeaders() http.Header {
 
 type Headers map[string]string
 
-func (j Headers) Value() (driver.Value, error) {
-	if j == nil {
+func (h Headers) Value() (driver.Value, error) {
+	if h == nil {
 		return nil, nil
 	}
-	return json.Marshal(j)
+	return json.Marshal(h)
 }
 
 func (h Headers) Scan(src any) error {

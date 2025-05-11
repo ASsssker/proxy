@@ -77,6 +77,11 @@ func (p ProxyService) GetTaskInfo(ctx context.Context, taskID string) (models.Ta
 	const op = "proxy_service.GetTaskInfo"
 	requestID := ctx.Value(RequestIDKey).(string)
 
+	if err := p.validator.Var(taskID, "uuid"); err != nil {
+		return models.TaskResult{}, fmt.Errorf("%s request_id=%s failed to validate task id: %w: %w",
+			op, requestID, ErrValidation, err)
+	}
+
 	log := p.log.With(slog.String("op", op), slog.String(RequestIDKey, requestID))
 	log.DebugContext(ctx, "start operation")
 
