@@ -1,6 +1,8 @@
 package models
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"net/http"
 	"strings"
 )
@@ -15,12 +17,12 @@ var (
 )
 
 type TaskResult struct {
-	ID            string            `json:"id"`
-	Status        TaskStatus        `json:"status"`
-	StatusCode    int               `json:"http_status_code"`
-	Headers       map[string]string `json:"headers"`
-	Body          string            `json:"body"`
-	ContentLength int               `json:"content_length"`
+	ID            string     `json:"id"`
+	Status        TaskStatus `json:"status"`
+	StatusCode    int        `json:"http_status_code"`
+	Headers       Headers    `json:"headers"`
+	Body          string     `json:"body"`
+	ContentLength int        `json:"content_length"`
 }
 
 type NewTask struct {
@@ -47,4 +49,24 @@ func (t Task) TaskHeadersToHTTPHeaders() http.Header {
 	}
 
 	return headers
+}
+
+type Headers map[string]string
+
+func (j Headers) Value() (driver.Value, error) {
+	if j == nil {
+		return nil, nil
+	}
+	return json.Marshal(j)
+}
+
+func (h Headers) Scan(src any) error {
+	var data []byte
+	switch v := src.(type) {
+	case string:
+		data = []byte(v)
+	case []byte:
+		data = v
+	}
+	return json.Unmarshal(data, &h)
 }

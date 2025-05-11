@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     id UUID PRIMARY KEY,
     status statuses NOT NULL,
     status_code INT NOT NULL DEFAULT 0,
-    headers TEXT NOT NULL DEFAULT '',
+    headers JSONB NOT NULL DEFAULT '{}'::JSONB,
     body TEXT NOT NULL DEFAULT '',
     content_length INT NOT NULL DEFAULT 0
 )
