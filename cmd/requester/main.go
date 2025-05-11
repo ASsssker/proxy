@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ASsssker/proxy/internal/apps/proxy"
+	"github.com/ASsssker/proxy/internal/apps/requester"
 	"github.com/ASsssker/proxy/internal/config"
 )
 
@@ -17,7 +17,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	app := proxy.MustNewProxyApp(ctx, cfg)
+	app := requester.MustNewRequester(ctx, cfg)
 	go app.MustRun(ctx)
 
 	stop := make(chan os.Signal, 1)

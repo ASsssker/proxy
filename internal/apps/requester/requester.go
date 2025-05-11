@@ -38,7 +38,7 @@ func MustNewRequester(ctx context.Context, cfg config.Config) *RequesterApp {
 	}
 	log.InfoContext(ctx, "successful connection to the mq")
 
-	taskExecutor := services.NewRequestExecutor(cfg)
+	taskExecutor := services.NewRequestExecutor(cfg, log)
 	service := services.NewRequesterService(*log, cfg, taskUpdater, msgReceiver, taskExecutor)
 
 	return &RequesterApp{

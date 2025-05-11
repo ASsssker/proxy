@@ -78,8 +78,8 @@ func (r *RabbitMQ) SendTask(ctx context.Context, task models.Task) error {
 	return nil
 }
 
-func (r *RabbitMQ) Subscribe(ctx context.Context, taskChan chan models.Task) (context.CancelFunc, error) {
-	msgChan, err := r.ch.ConsumeWithContext(ctx,
+func (r *RabbitMQ) Subscribe(_ context.Context, taskChan chan models.Task) (context.CancelFunc, error) {
+	msgChan, err := r.ch.Consume(
 		r.queueName,
 		"",
 		true,

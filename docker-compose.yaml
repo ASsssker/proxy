@@ -12,6 +12,17 @@ services:
       broker:
         condition: service_healthy
 
+  requester:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.requester
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+
   db:
     image: postgres:15-alpine
     container_name: postgres_db

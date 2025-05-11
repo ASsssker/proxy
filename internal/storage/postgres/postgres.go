@@ -117,11 +117,11 @@ func (p PostgresDB) UpdateTaskResult(ctx context.Context, taskResult models.Task
 				status_code = $2,
 				headers = $3,
 				body = $4,
-				content_length = $4
+				content_length = $5
 			WHERE id = $6`
 
 	if _, err := p.db.ExecContext(ctx, stmt,
-		taskResult.Status,
+		models.StatusDone,
 		taskResult.StatusCode,
 		taskResult.Headers,
 		taskResult.Body,
