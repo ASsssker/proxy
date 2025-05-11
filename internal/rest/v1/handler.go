@@ -80,7 +80,8 @@ func (h Handler) handlingError(ctx *gin.Context, err error) {
 		ctx.JSON(http.StatusNotFound, newErrorResponse(http.StatusNotFound, "task not found"))
 
 	case errors.Is(err, services.ErrValidation):
-		h.log.Debug("task not found", slog.String(services.RequestIDKey, requestIDWithStr))
+		h.log.Debug("validation error", slog.String(services.RequestIDKey, requestIDWithStr),
+			slog.String("error", err.Error()))
 		// TODO: добавлять подробную информациб о причине ошибки
 		ctx.JSON(http.StatusBadRequest, newErrorResponse(http.StatusBadRequest, "validation error"))
 
