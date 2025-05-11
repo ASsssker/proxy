@@ -3,6 +3,7 @@ package config
 import (
 	"net"
 	"net/url"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -16,8 +17,11 @@ type Config struct {
 }
 
 type ProxyServiceConfig struct {
-	ProxyHost string `env:"PROXY_HOST"`
-	ProxyPort string `env:"PROXY_PORT"`
+	ProxyHost             string        `env:"PROXY_HOST"`
+	ProxyPort             string        `env:"PROXY_PORT"`
+	ProxyHTTPReadTimeout  time.Duration `env:"PROXY_HTTP_READ_TIMEOUT"`
+	ProxyHTTPWriteTimeout time.Duration `env:"PROXY_HTTP_WRITE_TIMEOUT"`
+	ProxyHTTPIdleTimeout  time.Duration `env:"PROXY_HTTP_IDLE_TIMEOUT"`
 }
 
 type RequesterServiceConfig struct {

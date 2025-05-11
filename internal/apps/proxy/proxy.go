@@ -61,8 +61,11 @@ func MustNewProxyApp(ctx context.Context, cfg config.Config) ProxyApp {
 	v1.Register(handler, log, service)
 
 	srv := http.Server{
-		Handler: handler,
-		Addr:    net.JoinHostPort(cfg.ProxyHost, cfg.ProxyPort),
+		Handler:      handler,
+		Addr:         net.JoinHostPort(cfg.ProxyHost, cfg.ProxyPort),
+		ReadTimeout:  cfg.ProxyHTTPReadTimeout,
+		WriteTimeout: cfg.ProxyHTTPWriteTimeout,
+		IdleTimeout:  cfg.ProxyHTTPIdleTimeout,
 	}
 
 	return ProxyApp{
