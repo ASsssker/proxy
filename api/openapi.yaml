@@ -4,6 +4,20 @@ info:
   description: http proxy service
   version: 1.0.0
 paths:
+  /ping:
+    get:
+      operationId: pingService
+      summary: Service healthcheck
+      responses:
+        200:
+          description: Service started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
   /v1/task:
     post:
       operationId: addTask

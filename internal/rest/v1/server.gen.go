@@ -13,6 +13,9 @@ import (
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// Service healthcheck
+	// (GET /ping)
+	PingService(c *gin.Context)
 	// Add a request task
 	// (POST /v1/task)
 	AddTask(c *gin.Context)
@@ -29,6 +32,19 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(c *gin.Context)
+
+// PingService operation middleware
+func (siw *ServerInterfaceWrapper) PingService(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PingService(c)
+}
 
 // AddTask operation middleware
 func (siw *ServerInterfaceWrapper) AddTask(c *gin.Context) {
@@ -94,6 +110,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
+	router.GET(options.BaseURL+"/ping", wrapper.PingService)
 	router.POST(options.BaseURL+"/v1/task", wrapper.AddTask)
 	router.GET(options.BaseURL+"/v1/task/:id", wrapper.GetTaskResult)
 }

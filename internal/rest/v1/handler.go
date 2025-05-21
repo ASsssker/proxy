@@ -55,6 +55,10 @@ func (h Handler) GetTaskResult(ctx *gin.Context, id string) {
 	ctx.JSON(http.StatusOK, taskInfo)
 }
 
+func (h Handler) PingService(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"status": "service started"})
+}
+
 type errorResponse struct {
 	ErrorCode   int    `json:"error_code"`
 	Description string `json:"description"`

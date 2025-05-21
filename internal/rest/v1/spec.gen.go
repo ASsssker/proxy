@@ -18,17 +18,18 @@ import (
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8xUT0/cPhD9Ktb8flIvEVlaetlbKyHUU1FLTwitjD27MU1sdzxZWK3y3atxshA24YCE",
-	"UG+OM3/evPfGezChicGj5wTLPSRTYaPz8ZwokBwihYjEDvO1xWTIRXbByyfvIsISEpPzG+gKQElbmWBx",
-	"9Nt5xg0SdF0BhH9aR2hheT0OvikOweH2Dg1LrSudfk8R3Aa7m21dobZIOUZb6wSiri+f5U5yJj0b5CpY",
-	"iUXfNgLy4vwKCrj8/vNqBPKpQkv1TOWjQSXosfZLo/7A1Nb8ioFN8IyeVzX6DVdzfL8RKRVzXCXW3KYX",
-	"pS3A2dlqfd6YURs8QgHOryIFgynB4BsowOP9DM1HdDoLj3WnbEq08+swsWueQ0UKDzuVkLbOCAx2XEv6",
-	"8f0WKfVppyeLk4WMEiJ6HR0s4VO+KiBqrvJs5fa05INfQ8oyCslaWn+zsIQv1mZD96Ng4q+DroOMWaIY",
-	"a2dyTnmX+hXrd1JO/xOuYQn/lU9LWw4bW+bSXdczlWLwqRf34+L0VT2eW29W0m6W8edMCxylrUWrUmtE",
-	"43Vb1zsh8WyxeLOp+0dqrn+FSuRQ9zopH1gZQs1oC8UVqmw25ZIKPn+3CelDUslZFISf3wPhL48PEQ2j",
-	"HeAMWMSASAMWWZ+2aTTtegMprQbz5OlywMF55d7ZTuBscMZ9F8ijN0aMS7pBzk/D9R6cQBIzywrqJm+2",
-	"hfHWMbVYjIY+NsXNxHiLNzX3gPwFrSn/VWGdOXxUfuw9RWjQbdH2Jjx7BxMKDDHfOrTe/sPOukDOEU8s",
-	"Sr8a2fmN0gerdd3fAAAA//+ZzN20LwgAAA==",
+	"H4sIAAAAAAAC/8xUwW7bOBD9FWJ2gb0IkbObveiWAkHQU4MmPQWBwZBji4lEsuTIiWHo34uhFFu25DZB",
+	"iqAnW+TM8M2b92YDytXeWbQUodhAVCXWMv29CMEF/uOD8xjIYDrWGFUwnoyz/Elrj1BApGDsEtoMkNPm",
+	"ymkcXBtLuMQAbZtBwO+NCaihuB0G32Uvwe7+ARVxrRsZH8cI7p1eTz5dotQYUozU2jBEWV3t5Y5yRm/W",
+	"SKXTHIu2qRnk5cUNZHD15fpmAHJXoQnVROWDRjloW/tYq18xNhW9oWHlLKGleYV2SeUU37+JlJLIzyNJ",
+	"auLR0WZg9GS1Lm/IqHYWIQNj5z44hTFCrxvIwOLTBM0HdBoN27pjNjna2IUbyTX1IXxwz2sRMayMYhhk",
+	"qOL0w/MVhtilnZ7MTmbcivNopTdQwH/pKAMvqUy95Z6BFhtYYhohEyz52c8aCrgydnm9rRwwemdjx/6/",
+	"sxn/9LNMc/K+Miol5w+x81lnzLE2duSOGZugZZ+OHpGIJAOhTkmxqWsZ1oPbEmVFpSpRPaaIfHWa04sz",
+	"XZzo9lzrZN1uaBjpU6/gVzf5d8AFFPBXvltPeb+b8lS6bTtN7BF5+g4iJ8X7GhIZjpBaoxaxUazmRVNV",
+	"a5bL2RtH+7Ouu3U89X6JgschnmQU1pFQASWhzgSVKJKthInC2fTdRAz/RBGNRkb4/0cg/Gbx2aMi1D2c",
+	"HgtbDUOPZU9651oLKXrxpO72lJdvjG6Peu0SabBN2aJB1khpCd5uwDAkti0vG1mnHaZhuF8oNJgNmj4U",
+	"xd07HfwrcffIj8w6pFvhFonD7eSH2hMBFZoVO5pFePYBImQYLL6Fa6z+g5V1iZQidizyexWSsUshX6TW",
+	"tj8CAAD//2xh/N0ZCQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
