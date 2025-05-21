@@ -7,9 +7,11 @@ import (
 	"testing"
 
 	"github.com/ASsssker/proxy/internal/models"
+	mock_services "github.com/ASsssker/proxy/internal/services/mocks"
 	"github.com/ASsssker/proxy/internal/validation"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestAddTask_GoodPath(t *testing.T) {
@@ -42,14 +44,21 @@ func TestAddTask_GoodPath(t *testing.T) {
 		},
 	}
 
-	mockSender := new(mockMessageBroker)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-	mockProvider := new(mockTaskProvider)
-
+	mockProvider := mock_services.NewMockTaskProvider(ctrl)
+	mockSender := mock_services.NewMockMessageSender(ctrl)
 	for _, tt := range tests {
-		mockSender.On("SendTask", tt.ctx.Value(RequestIDKey)).Return(nil)
-		mockProvider.On("AddTask", tt.ctx.Value(RequestIDKey)).Return(nil)
+		mockProvider.EXPECT().
+			AddTask(gomock.Eq(tt.ctx), gomock.Any()).
+			Return(nil).AnyTimes()
+
+		mockSender.EXPECT().
+			SendTask(gomock.Eq(tt.ctx), gomock.Any()).
+			Return(nil).AnyTimes()
 	}
+
 	service := newProxyService(mockProvider, mockSender)
 	for _, tt := range tests {
 		id, err := service.AddTask(tt.ctx, tt.task)
@@ -109,7 +118,7 @@ func TestAddTask_BadPath(t *testing.T) {
 			name: "empty method",
 			ctx:  newContextWithRequestID(),
 			task: models.NewTask{
-				Method: "POST",
+				URL: "http://example.com",
 			},
 			errExpected: ErrValidation,
 		},
@@ -135,13 +144,21 @@ func TestAddTask_BadPath(t *testing.T) {
 		},
 	}
 
-	mockSender := new(mockMessageBroker)
-	mockProvider := new(mockTaskProvider)
-	for _, tt := range tests {
-		mockSender.On("SendTask", tt.ctx.Value(RequestIDKey)).Return(tt.errMsgSender)
-		mockProvider.On("AddTask", tt.ctx.Value(RequestIDKey)).Return(tt.errTaskProvider)
-	}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
+	mockProvider := mock_services.NewMockTaskProvider(ctrl)
+	mockSender := mock_services.NewMockMessageSender(ctrl)
+	for _, tt := range tests {
+
+		mockProvider.EXPECT().
+			AddTask(gomock.Eq(tt.ctx), gomock.Any()).
+			Return(tt.errTaskProvider).AnyTimes()
+
+		mockSender.EXPECT().
+			SendTask(gomock.Eq(tt.ctx), gomock.Any()).
+			Return(tt.errMsgSender).AnyTimes()
+	}
 	service := newProxyService(mockProvider, mockSender)
 
 	for _, tt := range tests {

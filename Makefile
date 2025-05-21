@@ -41,6 +41,7 @@ depends:
 	go mod download
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.6
 	go install github.com/pressly/goose/v3/cmd/goose@v3.24.2
+	go install go.uber.org/mock/mockgen@v0.5.2
 
 
 ## test: запуск тестов
