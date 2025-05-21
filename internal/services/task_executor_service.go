@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/ASsssker/proxy/internal/config"
 	"github.com/ASsssker/proxy/internal/models"
@@ -73,7 +74,7 @@ func (r RequestExecutor) Execute(ctx context.Context, task models.Task) (models.
 			StatusCode:    resp.StatusCode,
 			Headers:       headers,
 			Body:          string(body),
-			ContentLength: int(resp.ContentLength),
+			ContentLength: utf8.RuneCountInString(string(body)),
 		}
 
 		log.DebugContext(ctx, "the operation was successfully completed")
@@ -81,5 +82,5 @@ func (r RequestExecutor) Execute(ctx context.Context, task models.Task) (models.
 		return taskResult, nil
 	}
 
-	return models.TaskResult{}, fmt.Errorf("%s task_id=%sfailed to execute task: %v", op, task.ID, err)
+	return models.TaskResult{}, fmt.Errorf("%s task_id=%s failed to execute task: %v", op, task.ID, err)
 }
