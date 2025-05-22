@@ -73,8 +73,19 @@ services:
     depends_on:
       requester:
         condition: service_started
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    ports:
+      - "${GRAFANA_EXTERNAL_PORT}:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    env_file: .env
 
 volumes:
   postgres_data:
   rabbitmq_data:
   prometheus_data:
+  grafana_data:
