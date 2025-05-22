@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/ASsssker/proxy/internal/models"
+	prom "github.com/ASsssker/proxy/internal/monitoring/prometheus"
 	"github.com/ASsssker/proxy/internal/services"
 	"github.com/gin-gonic/gin"
 )
@@ -56,6 +57,7 @@ func (h Handler) GetTaskResult(ctx *gin.Context, id string) {
 }
 
 func (h Handler) PingService(ctx *gin.Context) {
+	prom.PingCounter.Inc()
 	ctx.JSON(http.StatusOK, gin.H{"status": "service started"})
 }
 

@@ -9,12 +9,15 @@ import (
 	"os"
 
 	"github.com/ASsssker/proxy/internal/config"
+	prom "github.com/ASsssker/proxy/internal/monitoring/prometheus"
 	"github.com/ASsssker/proxy/internal/mq"
 	v1 "github.com/ASsssker/proxy/internal/rest/v1"
 	"github.com/ASsssker/proxy/internal/services"
 	"github.com/ASsssker/proxy/internal/storage/postgres"
 	"github.com/ASsssker/proxy/internal/validation"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -57,7 +60,10 @@ func MustNewProxyApp(ctx context.Context, cfg config.Config) ProxyApp {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	prometheus.MustRegister(prom.PingCounter)
+
 	handler := gin.Default()
+	handler.GET("/metrics", gin.WrapH(promhttp.Handler()))
 	v1.Register(handler, log, service)
 
 	srv := http.Server{

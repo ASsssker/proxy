@@ -32,7 +32,7 @@ logs:
 ## clear: очистка volume хранилищ
 .PHONY: clear
 clear:
-	docker volume rm proxy_postgres_data proxy_rabbitmq_data
+	docker volume rm proxy_postgres_data proxy_rabbitmq_data proxy_prometheus_data
 
 
 ## depends: установка зависимостей

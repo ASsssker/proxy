@@ -60,6 +60,21 @@ services:
       retries: 3
     restart: unless-stopped
 
+  prometheus:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile.prometheus
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - "${PROMETHEUS_EXTERNAL_PORT}:9090"
+    volumes:
+      - prometheus_data:/etc/prometheus
+    depends_on:
+      requester:
+        condition: service_started
+
 volumes:
   postgres_data:
   rabbitmq_data:
+  prometheus_data:
