@@ -50,7 +50,6 @@ func (n *NatsMQ) SendTask(ctx context.Context, task models.Task) error {
 	log.DebugContext(ctx, "the operation was successfully completed")
 
 	return nil
-
 }
 
 func (n *NatsMQ) Subscribe(_ context.Context, taskChan chan models.Task) (context.CancelFunc, error) {
@@ -87,7 +86,7 @@ func (n *NatsMQ) Subscribe(_ context.Context, taskChan chan models.Task) (contex
 	return cancel, nil
 }
 
-func (n *NatsMQ) Close(ctx context.Context) error {
+func (n *NatsMQ) Close(_ context.Context) error {
 	n.conn.Close()
 	return nil
 }
