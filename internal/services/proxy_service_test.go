@@ -150,7 +150,6 @@ func TestAddTask_BadPath(t *testing.T) {
 	mockProvider := mock_services.NewMockTaskProvider(ctrl)
 	mockSender := mock_services.NewMockMessageSender(ctrl)
 	for _, tt := range tests {
-
 		mockProvider.EXPECT().
 			AddTask(gomock.Eq(tt.ctx), gomock.Any()).
 			Return(tt.errTaskProvider).AnyTimes()

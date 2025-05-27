@@ -32,7 +32,7 @@ logs:
 ## clear: очистка volume хранилищ
 .PHONY: clear
 clear:
-	docker volume rm proxy_postgres_data proxy_rabbitmq_data proxy_prometheus_data proxy_grafana_data
+	docker volume rm proxy_postgres_data proxy_broker_data proxy_prometheus_data proxy_grafana_data
 
 
 ## depends: установка зависимостей
@@ -68,7 +68,7 @@ migrations-up:
 	goose --dir migrations/ postgres postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_PORT}/${POSTGRES_DB} up
 
 
-## migrations-dwon: откат всех миграций БД
-.PHONY: migrations-dwon
+## migrations-down: откат всех миграций БД
+.PHONY: migrations-down
 migrations-down:
 	goose --dir migrations/ postgres postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_PORT}/${POSTGRES_DB} down-to 0

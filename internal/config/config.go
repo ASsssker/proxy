@@ -14,6 +14,7 @@ type Config struct {
 	RequesterServiceConfig
 	PostgresConfig
 	RabbitMQConfig
+	NatsMQCOnfig
 }
 
 type ProxyServiceConfig struct {
@@ -63,6 +64,22 @@ func (r RabbitMQConfig) RabbitDNS() string {
 		Scheme: "amqp",
 		User:   url.UserPassword(r.RabbitUser, r.RabbitPassword),
 		Host:   net.JoinHostPort(r.RabbitHost, r.RabbitPort),
+		Path:   "/",
+	}
+
+	return u.String()
+}
+
+type NatsMQCOnfig struct {
+	NatsHost          string `env:"NATS_HOST"`
+	NatsPort          string `env:"NATS_PORT"`
+	NatsTaskQueueName string `env:"NATS_TASK_QUEUE_NAME"`
+}
+
+func (n NatsMQCOnfig) NatsDNS() string {
+	u := url.URL{
+		Scheme: "nats",
+		Host:   net.JoinHostPort(n.NatsHost, n.NatsPort),
 		Path:   "/",
 	}
 

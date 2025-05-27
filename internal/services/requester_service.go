@@ -36,11 +36,10 @@ type RequesterService struct {
 	cancel       context.CancelFunc
 }
 
-func NewRequesterService(log slog.Logger, cfg config.Config, taskUpdater TaskUpdater,
+func NewRequesterService(log *slog.Logger, cfg config.Config, taskUpdater TaskUpdater,
 	msgReceiver MessageReceiver, taskExecutor TaskExecutor) *RequesterService {
-
 	return &RequesterService{
-		log:          &log,
+		log:          log,
 		taskUpdater:  taskUpdater,
 		msgReceiver:  msgReceiver,
 		taskExecutor: taskExecutor,
@@ -93,7 +92,6 @@ func (r RequesterService) Close(ctx context.Context) error {
 	}
 
 	return nil
-
 }
 
 func (r RequesterService) processTask(task models.Task) {

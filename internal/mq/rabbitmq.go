@@ -75,6 +75,8 @@ func (r *RabbitMQ) SendTask(ctx context.Context, task models.Task) error {
 		return fmt.Errorf("%s request_id=%s failed to publish task: %v", op, requestID, err)
 	}
 
+	log.DebugContext(ctx, "the operation was successfully completed")
+
 	return nil
 }
 

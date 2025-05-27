@@ -43,7 +43,7 @@ func MustNewProxyApp(ctx context.Context, cfg config.Config) ProxyApp {
 	}
 	log.InfoContext(ctx, "successful connection to the database")
 
-	msgSender, err := mq.NewRabbitMQ(cfg, log)
+	msgSender, err := mq.NewNatsMQ(cfg, log)
 	if err != nil {
 		panic(err)
 	}

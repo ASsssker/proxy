@@ -32,14 +32,14 @@ func MustNewRequester(ctx context.Context, cfg config.Config) *RequesterApp {
 	}
 	log.InfoContext(ctx, "successful connection to the database")
 
-	msgReceiver, err := mq.NewRabbitMQ(cfg, log)
+	msgReceiver, err := mq.NewNatsMQ(cfg, log)
 	if err != nil {
 		panic(err)
 	}
 	log.InfoContext(ctx, "successful connection to the mq")
 
 	taskExecutor := services.NewRequestExecutor(cfg, log)
-	service := services.NewRequesterService(*log, cfg, taskUpdater, msgReceiver, taskExecutor)
+	service := services.NewRequesterService(log, cfg, taskUpdater, msgReceiver, taskExecutor)
 
 	return &RequesterApp{
 		log:     log,
