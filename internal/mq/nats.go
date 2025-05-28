@@ -79,7 +79,7 @@ func (n *NatsMQ) Subscribe(_ context.Context, taskChan chan models.Task) (contex
 	go func() {
 		<-ctx.Done()
 		if err := sub.Unsubscribe(); err != nil {
-			n.log.Error("failed to unsubscribe queue")
+			n.log.Error("failed to unsubscribe queue", slog.String("error", err.Error()))
 		}
 	}()
 
