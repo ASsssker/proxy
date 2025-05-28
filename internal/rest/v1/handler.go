@@ -26,6 +26,7 @@ func Register(server gin.IRouter, log *slog.Logger, proxyService ProxyService) {
 	RegisterHandlersWithOptions(server, Handler{log: log, proxyService: proxyService},
 		GinServerOptions{
 			Middlewares: []MiddlewareFunc{
+				MiddlewareFunc(RequestDurationMiddleware()),
 				MiddlewareFunc(RequestIDMiddleware()),
 			}})
 }
@@ -57,7 +58,7 @@ func (h Handler) GetTaskResult(ctx *gin.Context, id string) {
 }
 
 func (h Handler) PingService(ctx *gin.Context) {
-	prom.PingCounter.Inc()
+	prom.ProxyPingCounter.Inc()
 	ctx.JSON(http.StatusOK, gin.H{"status": "service started"})
 }
 
