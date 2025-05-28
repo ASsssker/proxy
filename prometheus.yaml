@@ -4,6 +4,9 @@ scrape_configs:
   - job_name: proxy
     static_configs:
       - targets: ["proxy:8080"]
+  - job_name: requester
+    static_configs:
+    - targets: ["requester:8888"]
   - job_name: nats
     static_configs:
       - targets: ["nats_exporter:7777"]

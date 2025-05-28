@@ -8,6 +8,7 @@ import (
 
 	"github.com/ASsssker/proxy/internal/config"
 	"github.com/ASsssker/proxy/internal/models"
+	prom "github.com/ASsssker/proxy/internal/monitoring/prometheus"
 	"github.com/alitto/pond/v2"
 )
 
@@ -64,7 +65,12 @@ func (r RequesterService) Run(ctx context.Context) error {
 		if err != nil {
 			r.log.Error("failed to run task", slog.String("task_id", task.ID),
 				slog.String("error", err.Error()))
+
+			prom.RequesterTasksRejected.Inc()
+			continue
 		}
+
+		prom.RequesterTasksStarted.Inc()
 	}
 
 	r.pool.WaitingTasks()

@@ -29,6 +29,8 @@ type RequesterServiceConfig struct {
 	RequesterWorkersCount      uint          `env:"REQUESTER_WORKERS_COUNT"`
 	RequesterHTTPClientTimeout time.Duration `env:"REQUESTER_HTTP_CLIENT_TIMEOUT"`
 	RequesterRetryCount        uint          `env:"REQUESTER_RETRY_COUNT"`
+	RequesterMetricHost        string        `env:"REQUESTER_METRIC_HOST"`
+	RequesterMetricPort        string        `env:"REQUESTER_METRIC_PORT"`
 }
 
 type PostgresConfig struct {
