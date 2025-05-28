@@ -44,8 +44,6 @@ services:
   broker:
     image: nats:latest
     container_name: nats_server
-    ports:
-      - "${NATS_MONITOR_PORT}:${NATS_MONITOR_PORT}"  
     command: >
       -m ${NATS_MONITOR_PORT}
       --store_dir /data
@@ -53,6 +51,22 @@ services:
       - broker_data:/data
     restart: unless-stopped
  
+  nats_exporter:
+    image: natsio/prometheus-nats-exporter:latest
+    container_name: nats_exporter
+    command: >
+      -addr ${NATS_EXPORTER_HOST}
+      -p ${NATS_EXPORTER_PORT}
+      -varz
+      -connz
+      -routez
+      -subz
+      -healthz
+      http://${NATS_HOST}:${NATS_MONITOR_PORT}
+    depends_on:
+      broker:
+        condition: service_started
+    restart: unless-stopped
 
     # image: rabbitmq:3.12-management
     # container_name: rabbitmq
@@ -91,7 +105,7 @@ services:
     image: grafana/grafana-enterprise
     container_name: grafana
     ports:
-      - "${GRAFANA_EXTERNAL_PORT}:3000"
+      - "${GRAFANA_MONITORING_PORT}:3000"
     volumes:
       - grafana_data:/var/lib/grafana
     env_file: .env
